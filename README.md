@@ -1,61 +1,256 @@
-#  AWS End-to-End Data Pipeline Project
+# AWS Data Pipeline Orchestration Platform
 
-##  Overview
-
-This project demonstrates an event-driven data pipeline built using AWS services to ingest, transform, and analyze data.
+A production-oriented cloud data engineering project that orchestrates AWS Glue ETL pipelines using FastAPI and Boto3. This project demonstrates backend-driven ETL orchestration, cloud integration, REST APIs, and AWS-based data processing workflows.
 
 ---
 
-##  Architecture
+# Project Overview
 
-* Amazon S3 (Data Lake)
-* AWS Lambda (Trigger)
-* AWS Glue (ETL - PySpark)
-* Amazon Athena (Query Engine)
+This system enables triggering and monitoring AWS Glue ETL jobs through REST APIs built using FastAPI.
 
----
-
-##  Workflow
-
-1. Upload raw data to S3 (`raw/`)
-2. Lambda triggers Glue job automatically
-3. Glue cleans and transforms data
-4. Processed data stored in `processed/` (Parquet)
-5. Athena used for querying
+The pipeline processes raw Netflix dataset files using AWS Glue (PySpark), stores transformed data in Amazon S3, and exposes orchestration APIs for pipeline execution and monitoring.
 
 ---
 
-##  Technologies Used
+# Architecture
 
-* AWS S3
-* AWS Lambda
-* AWS Glue (PySpark)
-* AWS Athena
-* Python
-
----
-
-##  Sample Query
-
-```sql
-SELECT type, COUNT(*)
-FROM netflix_titles
-GROUP BY type;
+```text id="0jlwms"
+Client
+   ↓
+FastAPI REST API
+   ↓
+Route Layer
+   ↓
+Service Layer
+   ↓
+Boto3 AWS SDK
+   ↓
+AWS Glue ETL Job
+   ↓
+PySpark Transformations
+   ↓
+Amazon S3 Processed Data
 ```
 
 ---
 
-##  Key Features
+# Features
 
-* Event-driven pipeline
-* Serverless architecture
-* Data stored in optimized Parquet format
-* Scalable and cost-efficient
+* FastAPI backend APIs
+* AWS Glue ETL orchestration
+* Boto3 AWS integration
+* REST-based pipeline triggering
+* Glue job status monitoring
+* Environment variable configuration
+* Modular backend architecture
+* S3-based processed data storage
+* Swagger API documentation
+* Logging-ready backend structure
 
 ---
 
-## 🚀 Future Improvements
+# Tech Stack
 
-* Add partitioning
-* Add dashboard (QuickSight)
-* CI/CD pipeline
+## Backend
+
+* Python
+* FastAPI
+* Uvicorn
+
+## Cloud & Data Engineering
+
+* AWS Glue
+* Amazon S3
+* Boto3
+* PySpark
+
+## Development Tools
+
+* VS Code
+* Git
+* GitHub
+* python-dotenv
+
+---
+
+# Project Structure
+
+```text id="9jlwmd"
+AWS-data-pipeline-project/
+│
+├── app/
+│   ├── routes/
+│   │   └── pipeline_routes.py
+│   │
+│   ├── services/
+│   │   └── glue_services.py
+│   │
+│   ├── utils/
+│   │   └── logger.py
+│   │
+│   └── main.py
+│
+├── configs/
+│   └── config.py
+│
+├── pipelines/
+│   └── netflix_etl_pipeline.py
+│
+├── logs/
+├── tests/
+├── docs/
+│
+├── .env
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# API Endpoints
+
+## Health Check
+
+```http id="7jlwmy"
+GET /health
+```
+
+Checks backend health status.
+
+---
+
+## Run Pipeline
+
+```http id="6jlwmb"
+POST /run-pipeline
+```
+
+Triggers AWS Glue ETL job execution.
+
+### Sample Response
+
+```json id="1jlwmu"
+{
+  "status": "started",
+  "job_run_id": "jr_xxxxxxxxx"
+}
+```
+
+---
+
+## Get Pipeline Status
+
+```http id="0jlwms"
+GET /job-status/{job_run_id}
+```
+
+Returns current Glue job execution status.
+
+### Possible Status Values
+
+* STARTING
+* RUNNING
+* SUCCEEDED
+* FAILED
+* STOPPED
+* TIMEOUT
+
+---
+
+# Environment Variables
+
+Created an `.env` file in the project root.
+
+---
+
+# AWS Services Used
+
+* AWS Glue
+* Amazon S3
+* AWS IAM
+* CloudWatch Logs
+
+---
+
+# How to Run Locally
+
+## Clone Repository
+
+```bash id="1jlwmu"
+git clone <repository-url>
+cd AWS-data-pipeline-project
+```
+
+---
+
+## Create Virtual Environment
+
+```bash id="0jlwms"
+python -m venv .venv
+```
+
+---
+
+## Activate Environment
+
+### Windows
+
+```bash id="9jlwmd"
+.\.venv\Scripts\Activate.ps1
+```
+
+---
+
+## Install Dependencies
+
+```bash id="7jlwmy"
+pip install -r requirements.txt
+```
+
+---
+
+## Run FastAPI Server
+
+```bash id="6jlwmb"
+python -m uvicorn app.main:app --reload
+```
+
+---
+
+## Open Swagger Docs
+
+```text id="1jlwmu"
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# ETL Workflow
+
+1. FastAPI endpoint triggers AWS Glue job
+2. Glue job reads raw dataset from AWS Glue Catalog
+3. PySpark transformations are applied
+4. Processed data is written to Amazon S3 in Parquet format
+5. API monitors job execution status
+
+---
+
+# Current Improvements Implemented
+
+* Refactored monolithic ETL architecture
+* Added backend orchestration layer
+* Added AWS SDK integration
+* Added modular project structure
+* Added environment-based configuration
+* Added API-based job monitoring
+* Added scalable service architecture
+
+
+---
+
+# Author
+
+Anuja Ingale
+
+Data Engineering | Backend Engineering | Cloud Data Platforms
